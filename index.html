@@ -10,14 +10,53 @@
   </head>
   <body>
     <div id="app">
-      <h1>{{ product }}</h1>
-      <p>{{description}}</p>
+      <div class="nav-bar"></div>
+
+      <div class="cart">Cart({{ cart }})</div>
+
+      <div class="product-display">
+        <div class="product-container">
+          <div class="product-image">
+            <!-- image goes here -->
+            <a v-bind:href="url">
+              <img v-bind:src="image">
+            </a>
+          </div>
+          <div class="product-info">
+            <h1>{{ title }}</h1>
+            <p v-show="onSale">On Sale</p>
+            <p v-if="inventory > 10">In Stock</p>
+            <p v-else-if="inventory <= 10 && inventory > 0">Almost sold out!</p>
+            <p v-else>Out of Stock</p>
+            <p v-show="codingChallenges">{{description}}</p>
+            <ul>
+              <li v-for="detail in details">{{ detail }}</li>
+            </ul>
+            <div 
+              v-for="variant in variants" 
+              v-bind:key="variant.id" 
+              v-on:mouseover="updateImage(variant.image)" 
+              class="color-circle"
+              v-bind:style="{backgroundColor: variant.color }">
+            </div>
+            <div v-show="codingChallenges" v-for="size in sizes" v-bind:key="size.id">{{ size.size }}</div>
+            <button 
+              class="button" 
+              v-on:click="addToCart"
+              v-bind:class="{disabledButton: !inStock}"
+              v-bind:disabled="!inStock">
+                Add to Cart
+            </button>
+            <button class="button" v-show="codingChallenges" v-on:click="decrementToCart">Decrement to Cart</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Import App -->
     <script src="./main.js"></script>
 
-    <!-- Mount App-->
+    <!-- Mount App -->
     <script>
       const mountedApp = app.mount('#app')
     </script>
